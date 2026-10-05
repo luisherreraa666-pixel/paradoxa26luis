@@ -1,0 +1,23 @@
+CREATE TABLE FORO(
+id_foro INT AUTO_INCREMENT PRIMARY KEY,
+nombre_foro VARCHAR(50),
+descripcion VARCHAR(255)
+CREATE TABLE solicitud_soporte(
+id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
+id INT,
+asunto VARCHAR(50),
+descripcion VARCHAR(255),
+fecha_solicitud DATE,
+FOREIGN KEY (id) REFERENCES usuarios(id)
+);
+);CREATE TABLE cuenta(
+id_cuenta INT AUTO_INCREMENT PRIMARY KEY,
+id INT UNIQUE,
+fecha_verificacion DATE DEFAULT (CURRENT_DATE),
+FOREIGN KEY (id) REFERENCES usuarios(id)
+CREATE TABLE agente_soporte(
+id_agente INT AUTO_INCREMENT PRIMARY KEY,
+nombre VARCHAR(255),
+correo VARCHAR(255)
+);
+);
