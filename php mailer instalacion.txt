@@ -1,0 +1,126 @@
+INSTALACION DE PHP MAILER.
+
+1-ingresar el siguiente código en la raíz del proyecto: composer require phpmailer/phpmailer   
+ nota: en caso de no tener el composer instalado buscarlo e instalarlo para Windows.
+
+2-En caso de error: 
+pasos para arreglar El error de no deja extraer php mailer
+-Open your php.ini file.
+-Search for extension=zip and remove the semicolon ; at the beginning of the line to enable the zip extension.
+-Save the php.ini file and restart your web server.
+-ubicación de php.ini
+C:\xampp\php\php.ini
+
+3-necesitas crear una clave de aplicación dentro de Gmail para poder enviar el mail y necesitas la autenticación en 2 pasos de google, usa el siguiente link:
+el siguiente link es para crear la clave de aplicación de tu cuenta de Gmail que vamos a usar para el proyecto paradoxa266@gmail.com:
+https://myaccount.google.com/u/2/apppasswords?rapt=AEjHL4O24IxwCmfZ7jpcf7tefhl5kLX-LhUWFjC8mnRP_GNnxa_T265IoAKtAyeTRNEFwDjF9fOigLUWTgho8XD7YEXPRRlsFvaF6fXaVsgaUGQ1uXdL5Ho
+
+4-codigo para enviar correo en php:
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
+
+$mail = new PHPMailer(true);
+
+try {
+ $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';                     // Servidor SMTP de Gmail
+    $mail->SMTPAuth   = true;                                   // Habilitar autenticación SMTP
+    $mail->Username   = 'paradoxa266@gmail.com';                  // Tu correo de Gmail
+    $mail->Password   = 'yret lneh adip aqbg';                  // Tu Contraseña de Aplicación de 16 dígitos
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;          // Encriptación SSL (también puedes usar STARTTLS con puerto 587)
+    $mail->Port       = 587;                                    // Puerto SSL (o 587 para TLS)
+    //Recipients
+    $mail->setFrom('paradoxa266@gmail.com', 'Mailer');
+    $mail->addAddress('Thiagobe36@gmail.com', 'Thiago');     //Add a recipient             //Name is optional
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Here is the subject';
+    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+
+?>
+
+
+IMPLEMENTACION DE EMAIL: 
+
+1-Envio de email para registro de usuario con link de activación de cuenta.
+
+2-Reenvio de email con el link de activación de cuenta.
+
+3-Envio de email con link para restablecer la contraseña.
+
+Vamos a generar un token que se encriptara en la db para que el usuario valide su cuenta. 
+
+
+MODIFICACIONES DE LA BD:
+
+-creación de columnas tabla usuarios:
+	-estado_verificado: El valor por default es 0 que es cuenta no activada y 1 si esta activa.
+	-token: código alfanumerico generado de manera aleatoria.
+
+MODIFICAR LA RUTA ESTANDO DENTRO DEL SUBDIRECTORIO RAIZ:
+
+<?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+LOGRADO EL ENVIO DE EMAIL EN EL PROYECTO:
+ESTE CODIGO SE UTILIZA PARA PONER LOS DATOS EN ESA VARIABLE.
+$error1 = $this->enviarcorreo($nombre,$email,$token);
+        if ($error1 !== null) {
+        return $fallo($error1);
+        }
+ Y EL SIGUIENTE CODIGO ES LO QUE SE VA A MOSTRAR EN EL CORREO JUNTO CON EL CORREO Y LA CONTRASEÑA DEL EMAIL PARADOXA266@GMAIL.COM
+ private function enviarcorreo($nombre,$email, $token) {
+    $mail = new PHPMailer(true);
+    try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';                     // Servidor SMTP de Gmail
+    $mail->SMTPAuth   = true;                                   // Habilitar autenticación SMTP
+    $mail->Username   = 'paradoxa266@gmail.com';                  // Tu correo de Gmail
+    $mail->Password   = 'yret lneh adip aqbg';                  // Tu Contraseña de Aplicación de 16 dígitos
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;          // Encriptación SSL (también puedes usar STARTTLS con puerto 587)
+    $mail->Port       = 587;                                    // Puerto SSL (o 587 para TLS)
+    //Recipients
+    $mail->setFrom('paradoxa266@gmail.com', 'Paradoxa');
+    $mail->addAddress($email, $nombre);     //Add a recipient             //Name is optional
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Paradoxa26 -- Validacion de cuenta';
+    $mail->Body    = 'Hola ' . $nombre . '<br> Ingresa al siguiente link para validar tu cuenta <br> <a > </a>';
+    $mail->AltBody = '';
+
+    $mail->send();
+} catch (Exception $e) {
+    return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+return null;
+    }
+
+ACLARO QUE ES NECESARIO AGREGAR EL CAMPO TOKEN EN LA PARTE DE MODELS EN EL ENVIO DE DATOS 
+EJ; EN ESTA FUNCION TUVE QUE AGREGAR EL CAMPO $TOKEN.
+public function registrar($nombreReal, $correo, $password, $alias, $token, $rol = 'usuario') {
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+
+        $stmt = $this->db->prepare(
+            "INSERT INTO usuarios (nombre_usuario_real, correo, contrasenia, nombre_usuario_anonimo, rol, fecha_registro, token)
+             VALUES (?, ?, ?, ?, ?, CURDATE(),'$token')"
+        );
+        $stmt->bind_param("sssss", $nombreReal, $correo, $hash, $alias, $rol);
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    }

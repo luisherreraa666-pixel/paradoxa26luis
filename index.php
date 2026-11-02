@@ -1,9 +1,40 @@
+<?php
+// Front controller mínimo: index.php?c=Auth&a=login  ->  AuthController::login()
+// Sin el parámetro "c" se muestra el puzzle de PHYLLO OS (HTML de abajo).
+if (isset($_GET['c'])) {
+    require_once __DIR__ . '/config/conexion.php';
+
+    $controlador = preg_replace('/[^A-Za-z]/', '', $_GET['c']);
+    $accion      = preg_replace('/[^A-Za-z]/', '', $_GET['a'] ?? '');
+    $archivo     = __DIR__ . '/app/controllers/' . $controlador . 'Controller.php';
+
+    if ($controlador === '' || $accion === '' || !is_file($archivo)) {
+        http_response_code(404);
+        exit('Página no encontrada34.');
+    }
+
+    require_once $archivo;
+    $clase = $controlador . 'Controller';
+    $instancia = new $clase();
+
+    if (!is_callable([$instancia, $accion])) { // solo métodos públicos
+        http_response_code(404);
+        exit('Página no encontrada12.');
+    }
+
+    $instancia->$accion();
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PHYLLO OS</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="app/public/img/favicon.png" />
+  <link rel="shortcut icon" href="app/public/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="app/public/img/apple-touch-icon.png" />
   <link rel="stylesheet" href="app/public/css/style.css" />
   <style>
     body {
@@ -48,7 +79,7 @@
       top: 25%;
       left: 30%;
       width: 450px;
-      height: 200px;
+      height: 250px;
       background: var(--color-panel);
       border: 1px solid var(--color-titlebar-start);
       box-shadow: 0 0 0 1px #ffffff inset, 4px 4px 15px rgba(0, 0, 0, 0.5);
@@ -104,6 +135,7 @@
       flex-direction: column;
       height: calc(100% - 32px);
       box-sizing: border-box;
+      overflow-y: auto;
     }
     .hidden-artifact .input-group {
       display: flex;
@@ -156,11 +188,12 @@
       color: #0f0;
       font-family: var(--font-mono);
       font-size: 11px;
-      flex: 1;
+      flex: 0 0 auto;
       border: 2px inset #808080;
       word-break: break-all;
       white-space: pre-wrap;
       overflow-y: auto;
+      margin-bottom: 15px;
     }
     .taskbar {
       position: absolute;
@@ -225,11 +258,11 @@
       <div class="input-group">
         <div class="field text-field">
           <label>Texto Cifrado:</label>
-          <input type="text" id="cipherText" value="sfwjtbs fm dvfsqp ef mb qpmjmmb" placeholder="Ingrese texto..." />
+          <input type="text" id="cipherText" value="" placeholder="Ingrese texto..." />
         </div>
         <div class="field shift-field">
           <label>Shift:</label>
-          <input type="text" id="shiftValue" value="1" readonly />
+          <input type="text" id="shiftValue" value="1" />
         </div>
       </div>
       <button class="btn-decrypt" onclick="decryptCaesar()">DESCIFRAR</button>
@@ -355,13 +388,22 @@
   </div>
 
   <div class="taskbar">
-    <div class="start-button">
-      <span style="font-size: 14px;">🪟</span> Inicio
-    </div>
-    <div style="margin-left: auto; padding-right: 10px; color: var(--color-muted);">
-      12:00 PM
+    <div id="reloj" style="margin-left: auto; padding-right: 10px; color: var(--color-muted);">
+      --:-- --
     </div>
   </div>
+  <script>
+    (function () {
+      var reloj = document.getElementById('reloj');
+      function actualizar() {
+        var ahora = new Date();
+        reloj.textContent = ahora.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        // Vuelve a actualizar justo cuando cambie el minuto
+        setTimeout(actualizar, (60 - ahora.getSeconds()) * 1000 - ahora.getMilliseconds());
+      }
+      if (reloj) actualizar();
+    })();
+  </script>
 
   <audio id="bgMusic" src="app/public/audio/backgroundtheme.mp3" loop preload="auto"></audio>
   <audio id="bootSound" src="app/public/audio/phylloos.mp3" preload="auto"></audio>

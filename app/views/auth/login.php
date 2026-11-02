@@ -1,10 +1,33 @@
+<?php
+// Vista de login/registro. La renderiza AuthController (con $tab, $error, $exito, $old)
+// o se puede abrir directo (viene del puzzle de index.php): en ese caso usa los valores por defecto.
+require_once __DIR__ . '/../../../config/app.php';
+
+$tab   = (isset($tab) && $tab === 'register') ? 'register' : 'login';
+$error = $error ?? null;
+$exito = $exito ?? null;
+$old   = (isset($old) && is_array($old)) ? $old : [];
+
+// Aviso dejado por config/auth.php cuando se cerró una sesión de una cuenta sin validar.
+if ($error === null && !empty($_SESSION['login_error'])) {
+    $error = $_SESSION['login_error'];
+}
+unset($_SESSION['login_error']);
+
+if (!function_exists('h')) {
+    function h($valor) { return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8'); }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PHYLLO OS — System Access</title>
-  <link rel="stylesheet" href="../../public/css/style.css" />
+  <link rel="icon" type="image/png" sizes="64x64" href="<?= BASE_URL ?>/app/public/img/favicon.png" />
+  <link rel="shortcut icon" href="<?= BASE_URL ?>/app/public/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="<?= BASE_URL ?>/app/public/img/apple-touch-icon.png" />
+  <link rel="stylesheet" href="<?= BASE_URL ?>/app/public/css/style.css" />
   <style>
     body {
       overflow: hidden;
@@ -218,6 +241,17 @@
       font-size: 11px;
     }
     .status-pill { border: 2px inset #c0c0c0; padding: 2px 8px; background: #efefef; }
+    /* El formulario de registro es más alto: scroll interno si la pantalla es baja */
+    .content-wrapper {
+      padding: 20px 30px;
+      min-height: min(450px, calc(100vh - 175px));
+      max-height: calc(100vh - 175px);
+      overflow-y: auto;
+    }
+    .field-hint { font-size: 11px; color: #555555; margin-top: 3px; }
+    .msg-error, .msg-ok { margin-bottom: 15px; text-align: center; font-size: 12px; }
+    .msg-error { color: #8b0000; }
+    .msg-ok { color: #0b5e2b; }
   </style>
 </head>
 <body onload="init()">
@@ -249,27 +283,30 @@
 
       <div class="content-wrapper">
         <div class="auth-tabs">
-          <button id="btn-login" class="tab-btn active" onclick="toggleAuth('login')">Iniciar Sesión</button>
-          <button id="btn-register" class="tab-btn" onclick="toggleAuth('register')">Crear Cuenta</button>
+          <button id="btn-login" class="tab-btn<?= $tab === 'login' ? ' active' : '' ?>" onclick="toggleAuth('login')">Iniciar Sesión</button>
+          <button id="btn-register" class="tab-btn<?= $tab === 'register' ? ' active' : '' ?>" onclick="toggleAuth('register')">Crear Cuenta</button>
         </div>
 
         <!-- Login Section -->
-        <div id="loginSection" class="auth-box">
+        <div id="loginSection" class="auth-box<?= $tab === 'login' ? '' : ' hidden' ?>">
           <h2>Iniciar Sesión</h2>
           <p>Introduzca sus credenciales reales para acceder al sistema.</p>
 
-          <?php if (isset($error)): ?>
-            <div class="message" style="margin-bottom: 15px; text-align: center; color: red; font-size: 12px;"><?php echo $error; ?></div>
+          <?php if ($tab === 'login' && $error): ?>
+            <div class="msg-error"><?= h($error) ?></div>
+          <?php endif; ?>
+          <?php if ($tab === 'login' && $exito): ?>
+            <div class="msg-ok"><?= h($exito) ?></div>
           <?php endif; ?>
 
           <!--
             victor.kazamarov@paradoxa.corp
             moth_26
           -->
-          <form id="realLoginForm" action="/index.php?c=Auth&a=login" method="POST">
+          <form id="realLoginForm" action="<?= BASE_URL ?>/index.php?c=Auth&amp;a=login" method="POST">
             <div class="field">
               <label for="email">Correo Electrónico:</label>
-              <input type="email" id="email" name="email" required placeholder="usuario@empresa.com" />
+              <input type="email" id="email" name="email" required placeholder="usuario@empresa.com" value="<?= $tab === 'login' ? h($old['email'] ?? '') : '' ?>" />
             </div>
             <div class="field">
               <label for="password">Contraseña:</label>
@@ -284,22 +321,36 @@
         </div>
 
         <!-- Register Section -->
-        <div id="registerSection" class="auth-box hidden">
+        <div id="registerSection" class="auth-box<?= $tab === 'register' ? '' : ' hidden' ?>">
           <h2>Crear Cuenta</h2>
           <p>Regístrese para obtener acceso limitado al entorno corporativo.</p>
 
-          <?php if (isset($error)): ?>
-            <div class="message" style="margin-bottom: 15px; text-align: center; color: red; font-size: 12px;"><?php echo $error; ?></div>
+          <?php if ($tab === 'register' && $error): ?>
+            <div class="msg-error"><?= h($error) ?></div>
           <?php endif; ?>
 
-          <form action="/index.php?c=Auth&a=register" method="POST">
+          <form id="registerForm" action="<?= BASE_URL ?>/index.php?c=Auth&amp;a=register" method="POST">
+            <div class="field">
+              <label for="reg-nombre">Nombre completo:</label>
+              <input type="text" id="reg-nombre" name="nombre" required maxlength="50" placeholder="Nombre y apellido" autocomplete="name" value="<?= $tab === 'register' ? h($old['nombre'] ?? '') : '' ?>" />
+            </div>
+            <div class="field">
+              <label for="reg-alias">Alias público:</label>
+              <input type="text" id="reg-alias" name="alias" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_.\-]{3,30}" placeholder="investigador_00" autocomplete="off" value="<?= $tab === 'register' ? h($old['alias'] ?? '') : '' ?>" />
+              <div class="field-hint">Es lo único que verán los demás en el foro.</div>
+            </div>
             <div class="field">
               <label for="reg-email">Correo Electrónico:</label>
-              <input type="email" id="reg-email" name="email" required placeholder="usuario@empresa.com" />
+              <input type="email" id="reg-email" name="email" required maxlength="100" placeholder="usuario@empresa.com" autocomplete="email" value="<?= $tab === 'register' ? h($old['email'] ?? '') : '' ?>" />
             </div>
             <div class="field">
               <label for="reg-password">Contraseña:</label>
-              <input type="password" id="reg-password" name="password" required placeholder="********" />
+              <input type="password" id="reg-password" name="password" required minlength="8" maxlength="72" placeholder="********" autocomplete="new-password" />
+              <div class="field-hint">Mínimo 8 caracteres.</div>
+            </div>
+            <div class="field">
+              <label for="reg-password2">Repetir contraseña:</label>
+              <input type="password" id="reg-password2" name="password2" required minlength="8" maxlength="72" placeholder="********" autocomplete="new-password" />
             </div>
             <div class="button-row" style="justify-content: center; margin-top: 20px;">
               <button type="submit">Registrarse</button>
@@ -318,20 +369,29 @@
   </div>
 
   <div class="taskbar">
-    <div class="start-button">
-      <span style="font-size: 14px;">🪟</span> Inicio
-    </div>
-    <div style="margin-left: auto; padding-right: 10px; color: var(--color-muted);">
-      12:00 PM
+    <div id="reloj" style="margin-left: auto; padding-right: 10px; color: var(--color-muted);">
+      --:-- --
     </div>
   </div>
+  <script>
+    (function () {
+      var reloj = document.getElementById('reloj');
+      function actualizar() {
+        var ahora = new Date();
+        reloj.textContent = ahora.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        // Vuelve a actualizar justo cuando cambie el minuto
+        setTimeout(actualizar, (60 - ahora.getSeconds()) * 1000 - ahora.getMilliseconds());
+      }
+      if (reloj) actualizar();
+    })();
+  </script>
 
-  <audio id="bgMusic" src="../../public/audio/backgroundtheme.mp3" loop preload="auto"></audio>
-  <audio id="bootSound" src="../../public/audio/phylloos.mp3" preload="auto"></audio>
-  <audio id="interactSound" src="../../public/audio/interact.mp3" preload="auto"></audio>
-  <audio id="loginStartupSound" src="../../public/audio/loginstartup.mp3" preload="auto"></audio>
-  <audio id="postLoginSound" src="../../public/audio/postlogin.mp3" preload="auto"></audio>
-  <audio id="errorSound" src="../../public/audio/error.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="<?= BASE_URL ?>/app/public/audio/backgroundtheme.mp3" loop preload="auto"></audio>
+  <audio id="bootSound" src="<?= BASE_URL ?>/app/public/audio/phylloos.mp3" preload="auto"></audio>
+  <audio id="interactSound" src="<?= BASE_URL ?>/app/public/audio/interact.mp3" preload="auto"></audio>
+  <audio id="loginStartupSound" src="<?= BASE_URL ?>/app/public/audio/loginstartup.mp3" preload="auto"></audio>
+  <audio id="postLoginSound" src="<?= BASE_URL ?>/app/public/audio/postlogin.mp3" preload="auto"></audio>
+  <audio id="errorSound" src="<?= BASE_URL ?>/app/public/audio/error.mp3" preload="auto"></audio>
 
   <script>
     const windowEl = document.getElementById('mainWindow');
@@ -359,8 +419,8 @@
     });
 
     function centerWindow() {
-      const x = (window.innerWidth - windowEl.offsetWidth) / 2;
-      const y = (window.innerHeight - windowEl.offsetHeight) / 2;
+      const x = Math.max(0, (window.innerWidth - windowEl.offsetWidth) / 2);
+      const y = Math.max(0, (window.innerHeight - windowEl.offsetHeight) / 2);
       windowEl.style.left = x + 'px';
       windowEl.style.top = y + 'px';
       windowEl.style.margin = '0';
@@ -538,50 +598,19 @@
       });
     });
 
-    // --- Cheat code: acceso directo al foro sin backend ---
-    // TODO (back end): sacar esto en cuanto AuthController::login() pegue
-    // contra la base real (config/conexion.php conectado + password_verify).
-    // Mientras tanto, si coinciden estas credenciales fijas se saltea el
-    // POST a /index.php?c=Auth&a=login (que hoy no tiene router) y redirige
-    // directo al foro.
-    const realLoginForm = document.getElementById('realLoginForm');
-    const loginMessage = document.getElementById('loginMessage');
-    const cheatEmail = 'victor.kazamarov@paradoxa.corp';
-    const cheatPassword = 'moth_26';
+    // --- Sonido según el resultado que devolvió el servidor ---
+    // El login y el registro ahora los resuelve AuthController contra la base de datos;
+    // acá solo se refuerza con audio el mensaje que ya viene renderizado.
+    const hayError = <?= $error ? 'true' : 'false' ?>;
+    const hayExito = <?= $exito ? 'true' : 'false' ?>;
 
-    realLoginForm.addEventListener('submit', function (event) {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    function tryPlay(sound) {
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
 
-      if (email !== cheatEmail || password !== cheatPassword) {
-        // Sin cheat code y sin router todavía: no hay a dónde mandar el
-        // POST real, así que se corta acá en vez de dejarlo 404ear.
-        event.preventDefault();
-
-        stopSound(postLoginSound);
-        playSound(errorSound);
-        loginMessage.classList.remove('success');
-        loginMessage.textContent = 'Credenciales incorrectas.';
-        return;
-      }
-
-      event.preventDefault();
-
-      stopSound(errorSound);
-      playSound(loginStartupSound);
-      loginMessage.classList.remove('success');
-      loginMessage.textContent = 'Verificando...';
-
-      setTimeout(() => {
-        playSound(postLoginSound);
-        loginMessage.classList.add('success');
-        loginMessage.textContent = 'Acceso concedido. Cargando foro...';
-
-        setTimeout(() => {
-          window.location.href = '../home/index.php';
-        }, 1200);
-      }, 800);
-    });
+    if (hayError) tryPlay(errorSound);
+    else if (hayExito) tryPlay(postLoginSound);
   </script>
 </body>
 </html>
