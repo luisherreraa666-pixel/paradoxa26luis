@@ -15,7 +15,7 @@
     <?php $objetivo = 'publicacion'; $idObjetivo = $hilo['id_publicacion']; $item = $hilo; require __DIR__ . '/foro_reacciones.php'; ?>
     <?php if ($hilo['puede_eliminar']): ?>
       <form method="POST" action="<?= BASE_URL ?>/index.php?c=Foro&amp;a=eliminarPublicacion"
-            onsubmit="return confirm('¿Eliminar este hilo? Se borran también todos sus comentarios.')">
+            data-confirmar="¿Eliminar este hilo? Se borran también todos sus comentarios." data-confirmar-ok="Eliminar">
         <?= csrfCampo() ?>
         <input type="hidden" name="id" value="<?= (int) $hilo['id_publicacion'] ?>">
         <button type="submit" class="btn-mini">Eliminar hilo</button>
@@ -37,7 +37,7 @@
         <?php $objetivo = 'comentario'; $idObjetivo = $c['id_comentario']; $item = $c; require __DIR__ . '/foro_reacciones.php'; ?>
         <?php if ($c['puede_eliminar']): ?>
           <form method="POST" action="<?= BASE_URL ?>/index.php?c=Foro&amp;a=eliminarComentario"
-                onsubmit="return confirm('¿Eliminar este comentario?')">
+                data-confirmar="¿Eliminar este comentario?" data-confirmar-ok="Eliminar">
             <?= csrfCampo() ?>
             <input type="hidden" name="id" value="<?= (int) $c['id_comentario'] ?>">
             <button type="submit" class="btn-mini">Eliminar</button>

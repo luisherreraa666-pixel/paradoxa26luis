@@ -26,5 +26,6 @@
   </script>
 
   <script src="<?= BASE_URL ?>/app/public/js/fondo.js"></script>
+  <script src="<?= BASE_URL ?>/app/public/js/dialogo.js"></script>
 </body>
 </html>

@@ -327,7 +327,7 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
                   </form>
                   <?php if (!empty($usuario['foto_perfil'])): ?>
                   <div class="perfil-foto-quitar">
-                    <form method="POST" action="<?= BASE_URL ?>/index.php?c=Perfil&amp;a=eliminarFoto" onsubmit="return confirm('¿Quitar tu foto de perfil?')">
+                    <form method="POST" action="<?= BASE_URL ?>/index.php?c=Perfil&amp;a=eliminarFoto" data-confirmar="¿Quitar tu foto de perfil?" data-confirmar-ok="Quitar">
                       <?= csrfCampo() ?>
                       <button type="submit" class="btn-mini">Quitar foto</button>
                     </form>
@@ -439,8 +439,8 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
         const archivo = fotoInput.files[0];
         if (!archivo) return;
         if (archivo.size > 2 * 1024 * 1024) {
-          alert('La imagen pesa más de 2 MB. Elegí una más liviana.');
           fotoInput.value = '';
+          Dialogo.aviso('La imagen pesa más de 2 MB. Elegí una más liviana.', { titulo: 'Imagen demasiado pesada' });
           return;
         }
         if (!archivo.type.startsWith('image/')) return;
@@ -545,5 +545,6 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
       mouse.y = e.clientY;
     });
   </script>
+  <script src="<?= BASE_URL ?>/app/public/js/dialogo.js"></script>
 </body>
 </html>

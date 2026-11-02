@@ -289,3 +289,120 @@ button:active, .btn:active {
     border-bottom: 1px solid #8d8d8d;
   }
 }
+
+/* ---------- 4. DIÁLOGOS (reemplazan alert() y confirm()) ---------- */
+:root {
+  --dlg-acento:    var(--color-titlebar-start);
+  --dlg-barra-fin: var(--color-titlebar-end);
+  --dlg-icono-bg:  #d8e7f6;
+}
+
+.dlg-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dlg {
+  width: 420px;
+  max-width: 100%;
+  border: 1px solid var(--dlg-acento);
+  background: var(--color-panel);
+  box-shadow: 0 0 0 1px #ffffff inset, 4px 4px 20px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-system);
+}
+
+.dlg-barra {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 0 8px;
+  background: linear-gradient(to right, var(--dlg-acento), var(--dlg-barra-fin));
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+  user-select: none;
+}
+
+.dlg .dlg-cerrar {
+  width: 22px;
+  height: 20px;
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  border: 1px solid var(--border-raised-light);
+  border-right-color: var(--border-raised-darker);
+  border-bottom-color: var(--border-raised-darker);
+  background: var(--color-panel);
+  color: #000000;
+  cursor: pointer;
+}
+
+.dlg-cuerpo {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 18px 16px;
+}
+
+.dlg-icono {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: var(--dlg-icono-bg);
+  border: 2px solid var(--dlg-acento);
+  color: var(--dlg-acento);
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.dlg-texto {
+  padding-top: 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #000000;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.dlg-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 18px 16px;
+}
+
+.dlg .dlg-botones button {
+  min-width: 92px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 2px solid;
+  border-color: var(--border-raised-light) var(--border-raised-darker) var(--border-raised-darker) var(--border-raised-light);
+  background: var(--color-panel);
+  color: #000000;
+  cursor: pointer;
+}
+
+.dlg .dlg-botones button:active,
+.dlg .dlg-cerrar:active {
+  border-color: var(--border-raised-darker) var(--border-raised-light) var(--border-raised-light) var(--border-raised-darker);
+}
+
+/* Botón principal: borde negro extra, como el botón por defecto de Windows 98 */
+.dlg .dlg-botones .dlg-ok { box-shadow: 0 0 0 1px #000000; }
+
+.dlg .dlg-botones button:focus-visible {
+  outline: 1px dotted #000000;
+  outline-offset: -5px;
+}

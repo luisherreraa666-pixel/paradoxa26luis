@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" href="<?= BASE_URL ?>/app/public/img/apple-touch-icon.png" />
   <link rel="stylesheet" href="<?= BASE_URL ?>/app/public/css/style.css" />
   <style>
+    :root { --dlg-acento: #8b0000; --dlg-barra-fin: #4a0000; --dlg-icono-bg: #ffcccc; }
     body { overflow: hidden; position: relative; height: 100vh; width: 100vw; margin: 0; padding: 0; background: #000; font-family: Tahoma, Verdana, Arial, sans-serif; }
     #bgCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
     .desktop { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }

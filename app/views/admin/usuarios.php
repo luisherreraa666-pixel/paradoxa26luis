@@ -56,8 +56,8 @@ require __DIR__ . '/../layout/admin_header.php';
                   <button type="button" disabled title="No podés eliminar tu propia cuenta">Eliminar</button>
                 <?php else: ?>
                   <form method="POST" action="<?= BASE_URL ?>/index.php?c=Usuario&amp;a=eliminar"
-                        data-msg="<?= h('¿Eliminar a ' . $u['nombre_usuario_anonimo'] . '? Se borran también sus publicaciones y comentarios. No se puede deshacer.') ?>"
-                        onsubmit="return confirm(this.dataset.msg)">
+                        data-confirmar-ok="Eliminar"
+                        data-confirmar="<?= h('¿Eliminar a ' . $u['nombre_usuario_anonimo'] . '? Se borran también sus publicaciones y comentarios. No se puede deshacer.') ?>">
                     <?= csrfCampo() ?>
                     <input type="hidden" name="id" value="<?= (int) $u['id'] ?>">
                     <button type="submit">Eliminar</button>

@@ -6,6 +6,17 @@ Todo lo agregado o modificado sobre el proyecto original, en orden. Regla que se
 
 ---
 
+## Ronda 3 — Cuadros de diálogo propios (adiós `alert()` / `confirm()`)
+
+Los cuadros del navegador se reemplazaron por ventanas con la estética de PHYLLO OS (barra de título, bordes en relieve, botones estilo Windows 98; roja en el panel admin). No cambió ninguna lógica de PHP ni de base de datos.
+
+- **Nuevo** `app/public/js/dialogo.js`: `Dialogo.aviso(texto)` y `Dialogo.confirmar(texto, opciones, alAceptar)`. Esc cancela, Enter acepta, Tab da vueltas entre botones.
+- **Formularios:** `onsubmit="return confirm(...)"` pasó a `data-confirmar="..."` (y `data-confirmar-ok="Eliminar"` para el texto del botón). El script intercepta el envío y lo deja salir solo si se acepta.
+- `app/public/css/style.css`: sección 4 con los estilos `.dlg-*`.
+- Vistas tocadas: `home/index.php` (quitar foto, aviso de 2 MB), `home/foro_hilo.php` (eliminar hilo/comentario), `home/foro_nuevo.php` (aviso de 2 MB), `admin/usuarios.php` (eliminar usuario), `layout/admin_header.php` (colores rojos) y `layout/admin_footer.php` (carga del script).
+
+---
+
 ## Ronda 2 — Verificación obligatoria e imágenes en hilos
 
 ### 1. Cuenta sin validar: no entra ni al login ni al foro

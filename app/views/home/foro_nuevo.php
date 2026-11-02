@@ -42,8 +42,8 @@
       var archivo = input.files[0];
       if (!archivo) return;
       if (archivo.size > 2 * 1024 * 1024) {
-        alert('La imagen pesa más de 2 MB. Elegí una más liviana.');
         input.value = '';
+        Dialogo.aviso('La imagen pesa más de 2 MB. Elegí una más liviana.', { titulo: 'Imagen demasiado pesada' });
         return;
       }
       if (!archivo.type.startsWith('image/')) return;
