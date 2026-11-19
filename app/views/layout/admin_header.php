@@ -1,5 +1,5 @@
 <?php
-// Shell del panel de administración (ventana roja de PHYLLO OS).
+// Shell del panel de administración (ventana roja de PARADOX).
 // Variables esperadas: $tituloVentana. Se cierra con layout/admin_footer.php.
 ?>
 <!DOCTYPE html>
@@ -7,7 +7,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PHYLLO OS — <?= h($tituloVentana) ?></title>
+  <title>PARADOX — <?= h($tituloVentana) ?></title>
   <link rel="icon" type="image/png" sizes="64x64" href="<?= BASE_URL ?>/app/public/img/favicon.png" />
   <link rel="shortcut icon" href="<?= BASE_URL ?>/app/public/img/favicon.ico" />
   <link rel="apple-touch-icon" href="<?= BASE_URL ?>/app/public/img/apple-touch-icon.png" />
@@ -81,7 +81,7 @@
       <div id="windowHeader" class="title-bar">
         <div class="title-left">
           <span class="title-icon" data-letter="A"></span>
-          <span>PHYLLO OS — <?= h($tituloVentana) ?></span>
+          <span>PARADOX — <?= h($tituloVentana) ?></span>
         </div>
         <div class="window-controls">
           <div class="ctrl">_</div>
