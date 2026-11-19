@@ -41,7 +41,7 @@
     const rows = Math.ceil(height / spacing) + 1;
     for (let y = 0; y <= rows; y++) {
       for (let x = 0; x <= cols; x++) {
-        points.push({ baseX: x * spacing, baseY: y * spacing, x: x * spacing, y: y * spacing });
+        points.push({ baseX: x * spacing + (y % 2) * (spacing / 2), baseY: y * spacing * 0.8660254, x: x * spacing + (y % 2) * (spacing / 2), y: y * spacing * 0.8660254 });
       }
     }
   }
@@ -84,20 +84,20 @@
     ctx.strokeStyle = 'rgba(160, 200, 255, 0.2)';
     ctx.lineWidth = 1;
 
-    function tri(a, b, c) {
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y);
-      ctx.closePath();
-      ctx.stroke();
-    }
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const p1 = points[y * (cols + 1) + x];
         const p2 = points[y * (cols + 1) + (x + 1)];
         const p3 = points[(y + 1) * (cols + 1) + x];
         const p4 = points[(y + 1) * (cols + 1) + (x + 1)];
-        if (p1 && p2 && p3) tri(p1, p2, p3);
-        if (p2 && p3 && p4) tri(p2, p3, p4);
+        if (!p1 || !p2 || !p3 || !p4) continue;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.closePath();
+        ctx.stroke();
       }
     }
     requestAnimationFrame(animate);
