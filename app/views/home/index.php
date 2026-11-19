@@ -359,7 +359,7 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
             <div class="panel">
               <h2>Sobre nosotros</h2>
               <p>Paradoxa26 es el espacio de trabajo compartido de Paradoxa: un lugar donde empleados e investigadores ponen en común lo que encuentran en los registros archivados, contrastan datos y avanzan juntos en el caso.</p>
-              <p>Desde el nodo ARG-26 custodiamos y mantenemos disponibles esos registros, y los ofrecemos a través de PHYLLO OS, nuestro entorno corporativo interno.</p>
+              <p>Desde el nodo ARG-26 custodiamos y mantenemos disponibles esos registros, y los ofrecemos a través de PARADOX, nuestro entorno corporativo interno.</p>
             </div>
             <div class="panel">
               <h2>Nuestros objetivos</h2>
@@ -367,7 +367,7 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
                 <li>Preservar los registros archivados de la empresa de forma íntegra y trazable.</li>
                 <li>Facilitar el trabajo colaborativo entre investigadores, cuidando el anonimato de cada alias.</li>
                 <li>Proteger la confidencialidad de la información y de las cuentas de los usuarios.</li>
-                <li>Mejorar de forma continua PHYLLO OS y sus servicios de acceso, archivo y comunicaciones.</li>
+                <li>Mejorar de forma continua PARADOX y sus servicios de acceso, archivo y comunicaciones.</li>
               </ul>
             </div>
             <div class="panel">
@@ -384,7 +384,7 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
               <table class="datos">
                 <tr><th>Correo</th><td><a href="mailto:paradoxa266@gmail.com">paradoxa266@gmail.com</a></td></tr>
                 <tr><th>Región / nodo</th><td>ARG-26 (Argentina)</td></tr>
-                <tr><th>Sistema</th><td>PHYLLO OS — Build 1.0</td></tr>
+                <tr><th>Sistema</th><td>PARADOX — Build 1.0</td></tr>
               </table>
               <p style="margin-top: 10px;">Si tenés un problema con tu cuenta o querés reportar contenido del foro, escribinos con tu alias y una breve descripción. Nunca te vamos a pedir tu contraseña.</p>
             </div>
