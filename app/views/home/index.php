@@ -476,7 +476,7 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
       const rows = Math.ceil(height / spacing) + 1;
       for (let y = 0; y <= rows; y++) {
         for (let x = 0; x <= cols; x++) {
-          points.push({ baseX: x * spacing, baseY: y * spacing, x: x * spacing, y: y * spacing });
+          points.push({ baseX: x * spacing + (y % 2) * (spacing / 2), baseY: y * spacing * 0.8660254, x: x * spacing + (y % 2) * (spacing / 2), y: y * spacing * 0.8660254 });
         }
       }
     }
@@ -512,22 +512,14 @@ $titulosVista    = ['viewForo' => 'Foro', 'viewCuenta' => 'Mi cuenta', 'viewSobr
           const p2 = points[y * (cols + 1) + (x + 1)];
           const p3 = points[(y + 1) * (cols + 1) + x];
           const p4 = points[(y + 1) * (cols + 1) + (x + 1)];
-          if (p1 && p2 && p3) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.lineTo(p3.x, p3.y);
-            ctx.closePath();
-            ctx.stroke();
-          }
-          if (p2 && p3 && p4) {
-            ctx.beginPath();
-            ctx.moveTo(p2.x, p2.y);
-            ctx.lineTo(p3.x, p3.y);
-            ctx.lineTo(p4.x, p4.y);
-            ctx.closePath();
-            ctx.stroke();
-          }
+          if (!p1 || !p2 || !p3 || !p4) continue;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.lineTo(p4.x, p4.y);
+          ctx.lineTo(p3.x, p3.y);
+          ctx.closePath();
+          ctx.stroke();
         }
       }
       requestAnimationFrame(animate);
