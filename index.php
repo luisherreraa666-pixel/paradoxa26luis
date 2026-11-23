@@ -269,7 +269,7 @@ if (isset($_GET['c'])) {
     </div>
   </div>
 
-  <div id="notepadWindow" class="window" style="top: 60px; left: 60px; width: 340px;">
+  <div id="notepadWindow" class="window" style="top: 60px; left: 60px; width: 340px; display: none;">
     <div id="notepadHeader" class="title-bar">
       <div class="title-left">
         <span class="title-icon" data-letter="N"></span>
@@ -277,7 +277,7 @@ if (isset($_GET['c'])) {
       </div>
       <div class="window-controls">
         <div class="ctrl">_</div>
-        <div class="ctrl">□</div>
+        <div class="ctrl" id="showNotepadBtn" title="Mostrar notas">□</div>
         <div class="ctrl" id="closeNotepadBtn">×</div>
       </div>
     </div>
@@ -498,6 +498,11 @@ if (isset($_GET['c'])) {
 
     document.addEventListener('mouseup', () => {
       isDraggingNotepad = false;
+    });
+
+    document.getElementById('showNotepadBtn').addEventListener('click', () => {
+      notepadEl.style.display = 'block';
+      notepadEl.style.zIndex = 100;
     });
 
     document.getElementById('closeNotepadBtn').addEventListener('click', () => {
