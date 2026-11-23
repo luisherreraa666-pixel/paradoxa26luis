@@ -289,7 +289,7 @@ if (isset($_GET['c'])) {
       <span style="text-decoration: line-through; opacity: 0.5;">ayuda</span>
     </div>
     <div style="background: #fff; color: #000; padding: 14px; font-family: 'Courier New', monospace; font-size: 13px; min-height: 90px;">
-      los controles de esta ventana no siempre hacen lo que dicen.
+      boton equivocado, estas cerca de encontrar el indicado
     </div>
   </div>
 
