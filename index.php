@@ -269,7 +269,7 @@ if (isset($_GET['c'])) {
     </div>
   </div>
 
-  <div id="notepadWindow" class="window" style="top: 60px; left: 60px; width: 340px; display: none;">
+  <div id="notepadWindow" class="window" style="top: 60px; left: 60px; width: 340px;">
     <div id="notepadHeader" class="title-bar">
       <div class="title-left">
         <span class="title-icon" data-letter="N"></span>
@@ -289,7 +289,7 @@ if (isset($_GET['c'])) {
       <span style="text-decoration: line-through; opacity: 0.5;">ayuda</span>
     </div>
     <div style="background: #fff; color: #000; padding: 14px; font-family: 'Courier New', monospace; font-size: 13px; min-height: 90px;">
-      boton equivocado, estas cerca de encontrar el indicado
+      los controles de esta ventana no siempre hacen lo que dicen.
     </div>
   </div>
 
@@ -353,7 +353,7 @@ if (isset($_GET['c'])) {
 
             <form id="loginForm">
               <div class="field">
-                <label for="employeeId">Employee ID</label>
+                <label for="employeeId">log-in empleado</label>
                 <input type="text" id="employeeId" autocomplete="off" />
               </div>
 
