@@ -319,7 +319,7 @@ if (isset($_GET['c'])) {
       <div class="content">
         <section class="left-panel">
           <div class="banner">
-            <h1>PHYLLO OS</h1>
+            <h1>Paradoxa OS</h1>
             <p>
               Entorno corporativo interno para la identificación de empleados, el acceso a archivos y las comunicaciones administrativas.
             </p>
